@@ -9,11 +9,13 @@ public class FileAccess : MonoBehaviour {
 
 	string _StrageDir = "";
 
-	//public string fileName = "";
+    //public string fileName = "";
 
-	//public SetVideoURL videoCtrl;
+    //public SetVideoURL videoCtrl;
 
     //float timer = 0.0f;
+
+    public Text pathText;
 
     //public ScrollController scrollCtrl;
 
@@ -57,14 +59,30 @@ public class FileAccess : MonoBehaviour {
 #endif
         callback(stringList);
         yield return null;
-    } 
+    }
+
+    public List<string> GetFilesFullPath(string extention, string dirName)
+    {
+        pathText.text = _StrageDir + "/" + dirName;
+        DirectoryInfo dir = new DirectoryInfo(_StrageDir + dirName);
+        FileInfo[] files = dir.GetFiles(extention);
+
+        List<string> returnList = new List<string>();
+        foreach(FileInfo f in files)
+        {
+            returnList.Add(f.FullName);
+        }
+
+        return returnList;
+    }
 
     public List<string> SearchAllFiles(string extention, string dirName)
     {
         StartCoroutine(GetFilePath());
 
         List<string> returnList = new List<string>();
-        StartCoroutine(GetFilesFullPath(dirName, extention, (result) => returnList = result));
+        //StartCoroutine(GetFilesFullPath(dirName, extention, (result) => returnList = result));
+        returnList = new List<string>(GetFilesFullPath(extention, dirName));
 
         StopAllCoroutines();
 
